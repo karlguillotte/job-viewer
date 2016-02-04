@@ -1,5 +1,5 @@
-var element = document.createElement('h1');
+const element = document.createElement('h1')
 
-element.innerHTML = 'Hello world';
+element.innerHTML = 'Hello world'
 
-document.body.appendChild(element);
+document.body.appendChild(element)
