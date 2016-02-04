@@ -4,15 +4,18 @@
   "description": "Job Viewer à la GeoCanvas",
   "main": "index.js",
   "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "build": "webpack",
-      "dev": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "dev": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.4.5",
     "babel-loader": "^6.2.2",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1"
   }
