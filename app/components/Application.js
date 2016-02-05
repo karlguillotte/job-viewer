@@ -18,6 +18,12 @@ const STYLES = {
     },
     RIGHT: {
         flexGrow: 4,
+    },
+    PANEL: {
+        position: 'fixed',
+        top: 7,
+        right: 7,
+        zIndex: 1
     }
 }
 
@@ -79,9 +85,22 @@ export default class Application extends Component {
     }
     render() {
         const {tenants, jobs, bounds, activeTenantId} = this.state
+        let activeTenant = null
+
+        if (activeTenantId) {
+            activeTenant = tenants.find(tenant => tenant.id === activeTenantId)
+        }
 
         return (
             <div style={STYLES.APP}>
+                {activeTenant &&
+                    <div className='panel panel-default' style={STYLES.PANEL}>
+                        <div className='panel-heading'>{activeTenant.name}</div>
+                        <div className='panel-body'>
+                            {jobs.length} jobs
+                        </div>
+                    </div>
+                }
                 <div style={STYLES.LEFT}>
                     <List>
                         {tenants.map(({id, name}) => (
