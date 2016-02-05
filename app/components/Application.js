@@ -49,7 +49,9 @@ export default class Application extends Component {
                 <div style={STYLES.LEFT}>
                     <List>
                         {tenants.map(tenant => (
-                            <a href='#' className='list-group-item'>{tenant.name}</a>
+                            <a key={tenant.id} href='#' className='list-group-item'>
+                                {tenant.name}
+                            </a>
                         ))}
                     </List>
                 </div>
