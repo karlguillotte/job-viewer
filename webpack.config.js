@@ -1,4 +1,5 @@
 var path = require('path')
+var webpack = require('webpack')
 
 module.exports = {
     entry: [
@@ -25,5 +26,20 @@ module.exports = {
             test: /\.jpg$/,
             loader: 'file'
         }]
-    }
+    },
+    devServer: {
+        devtool: 'eval',
+        progress: true,
+        colors: true,
+        hot: true,
+        contentBase: 'build',
+        proxy: {
+            '/api*': {
+                target: 'http://localhost/cds',
+            },
+        }
+    },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ]
 }
