@@ -1,5 +1,5 @@
-const element = document.createElement('h1')
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Application from './components/Application'
 
-element.innerHTML = 'Hello world'
-
-document.body.appendChild(element)
+ReactDOM.render(<Application />, document.getElementById('container'))
