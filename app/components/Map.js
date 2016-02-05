@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react'
 import 'leaflet/dist/leaflet.css'
-import { Map, TileLayer } from 'react-leaflet'
+import { Map as BaseMap, TileLayer } from 'react-leaflet'
 
 const url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
 const center  = [49.28,-123.15]
@@ -9,11 +9,26 @@ const STYLE = {
     height: '100vh'
 }
 
-export default ({
-    children
-}) => (
-    <Map style={STYLE} {...{center , zoom}}>
-        <TileLayer {...{url}} />
-        {children}
-    </Map>
-)
+export default class Map extends Component {
+    map = null;
+    get leaflet() {
+        return this.map.getLeafletElement()
+    }
+    componentWillReceiveProps(nextProps) {
+        const {bounds} = this.props
+
+        if (!nextProps.bounds.isValid() || nextProps.bounds.equals(bounds)) {
+            return
+        }
+
+        this.leaflet.fitBounds(nextProps.bounds)
+    }
+    render() {
+        return (
+            <BaseMap ref={map => this.map = map} style={STYLE} {...{center , zoom}}>
+                <TileLayer {...{url}} />
+                {this.props.children}
+            </BaseMap>
+        )
+    }
+}
