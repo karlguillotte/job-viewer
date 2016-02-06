@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import List from './List'
-import Map from './Map'
+import List from '../containers/List'
+import Map from '../containers/Map'
+import computeBounds from '../utils/computeBounds'
 import { Marker, Popup } from 'react-leaflet'
-import { LatLng, LatLngBounds } from 'leaflet'
 
 const STYLES = {
     APP: {
@@ -35,48 +35,7 @@ const OPTIONS = {
     credentials: 'include',
 }
 
-function computeBounds(jobs) {
-    if (jobs.length === 0) {
-        return new LatLngBounds()
-    }
-
-    const longitudes = jobs.map(job => job.longitude)
-    const latitudes = jobs.map(job => job.latitude)
-    const sw = new LatLng(Math.min(...latitudes), Math.min(...longitudes))
-    const ne = new LatLng(Math.max(...latitudes), Math.max(...longitudes))
-
-    return new LatLngBounds(sw, ne)
-}
-
 export default class Application extends Component {
-    state = {
-        tenants: [],
-        jobs: [],
-        bounds: new LatLngBounds(),
-        activeTenantId: null
-    };
-    componentDidMount() {
-        this.fetchTenants()
-    }
-    fetchTenants() {
-        fetch('/api/v1/tenants', OPTIONS)
-        .then(response => response.json())
-        .then(payload => {
-            this.setState({
-                tenants: payload.data
-            })
-        })
-    }
-    fetchJobs(tenantId) {
-        fetch(`/api/v1/tenants/${tenantId}/jobs`, OPTIONS)
-        .then(response => response.json())
-        .then(({data}) => {
-            this.setState({
-                jobs: data,
-                bounds: computeBounds(data)
-            })
-        })
-    }
     handleTenantClick(tenantId, event) {
         event.preventDefault()
         this.setState({
@@ -84,33 +43,13 @@ export default class Application extends Component {
         }, this.fetchJobs.bind(this, tenantId))
     }
     render() {
-        const {tenants, jobs, bounds, activeTenantId} = this.state
-        let activeTenant = null
-
-        if (activeTenantId) {
-            activeTenant = tenants.find(tenant => tenant.id === activeTenantId)
-        }
-
         return (
             <div style={STYLES.APP}>
-                {activeTenant &&
-                    <div className='panel panel-default' style={STYLES.PANEL}>
-                        <div className='panel-heading'>{activeTenant.name}</div>
-                        <div className='panel-body'>
-                            {jobs.length} jobs
-                        </div>
-                    </div>
-                }
                 <div style={STYLES.LEFT}>
-                    <List>
-                        {tenants.map(({id, name}) => (
-                            <a key={id} href='#' className={`list-group-item ${activeTenantId === id ? 'active' : ''}`} onClick={this.handleTenantClick.bind(this, id)}>
-                                {name}
-                            </a>
-                        ))}
-                    </List>
+                    <List />
                 </div>
                 <div style={STYLES.RIGHT}>
+                    <Map />
                     <Map bounds={bounds} >
                         {jobs.map(({id, longitude, latitude, description, jobNumber, year}) => (
                             <Marker key={id} position={[latitude, longitude]}>
